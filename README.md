@@ -26,3 +26,9 @@ prar <repository>
 ```
 
 Note: you should be in the <repository> directory.
+
+## Install
+
+```bash
+sudo GOBIN=/usr/local/bin/ go install
+```
