@@ -14,7 +14,10 @@ import (
 
 func main() {
 	dir := os.Args[1]
-	homeDir, err := os.UserHomeDir()
+	homeDir, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
 
 	filePath := homeDir + "/.config/prar.json"
 
