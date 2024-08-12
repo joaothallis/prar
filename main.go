@@ -12,14 +12,33 @@ import (
 // JSON example
 // {"ar": ["joaothallis"], "elixir": ["josevalim", "eksperimental"]}
 
+func getPrarFilePath(globalArg string) (string, error) {
+	switch globalArg {
+	case "--global":
+		homeDir, err := os.UserHomeDir()
+		return homeDir + "/.config/prar.json", err
+	default:
+		homeDir, err := os.Getwd()
+		return homeDir + "/.prar.json", err
+	}
+}
+
 func main() {
+	args := os.Args[1:]
 	dir := os.Args[1]
-	homeDir, err := os.Getwd()
+	var globalArg string
+
+	if len(args) > 1 {
+		globalArg = os.Args[2]
+	} else {
+		globalArg = ""
+	}
+
+	filePath, err := getPrarFilePath(globalArg)
+	fmt.Printf(filePath)
 	if err != nil {
 		panic(err)
 	}
-
-	filePath := homeDir + "/.config/prar.json"
 
 	file, err := os.Open(filePath)
 	if err != nil {
