@@ -27,7 +27,7 @@ func getPrarFilePath() (string, error) {
 
 func getProjectName() (string, error) {
 	args := flag.Args()
-	if len(args) >= 1 {
+	if len(args) > 0 {
 		return os.Args[1], nil
 	} else {
 		cwd, err := os.Getwd()
