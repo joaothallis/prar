@@ -14,8 +14,10 @@ import (
 // JSON example
 // {"ar": ["joaothallis"], "elixir": ["josevalim", "eksperimental"]}
 
-func getPrarFilePath(globalArg bool) (string, error) {
-	if globalArg {
+func getPrarFilePath() (string, error) {
+	globalFlag := flag.Bool("global", false, "When you choose to using ./config/prar.json")
+	flag.Parse()
+	if *globalFlag {
 		homeDir, err := os.UserHomeDir()
 		return homeDir + "/.config/prar.json", err
 	} else {
@@ -41,8 +43,14 @@ func errorHandler(err error) {
 	}
 }
 
-func getUsers(filePath string, dir string) string {
+func getUsers() string {
+	filePath, err := getPrarFilePath()
+	errorHandler(err)
+
 	file, err := os.Open(filePath)
+	errorHandler(err)
+
+	dir, err := getProjectName()
 	errorHandler(err)
 
 	defer file.Close()
@@ -70,15 +78,6 @@ func ghPrRequest(users string) {
 }
 
 func main() {
-	globalFlag := flag.Bool("global", false, "When you choose to using ./config/prar.json")
-	flag.Parse()
-
-	dir, err := getProjectName()
-	errorHandler(err)
-
-	filePath, err := getPrarFilePath(*globalFlag)
-	errorHandler(err)
-
-	users := getUsers(filePath, dir)
+	users := getUsers()
 	ghPrRequest(users)
 }
