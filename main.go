@@ -35,44 +35,50 @@ func getProjectName() (string, error) {
 	}
 }
 
-func main() {
-	globalFlag := flag.Bool("global", false, "When you choose to using ./config/prar.json")
-	flag.Parse()
-	fmt.Println(flag.Args())
-
-	dir, err := getProjectName()
+func errorHandler(err error) {
 	if err != nil {
 		panic(err)
 	}
-	filePath, err := getPrarFilePath(*globalFlag)
-	if err != nil {
-		panic(err)
-	}
+}
 
+func getUsers(filePath string, dir string) string {
 	file, err := os.Open(filePath)
-	if err != nil {
-		panic(err)
-	}
+	errorHandler(err)
+
 	defer file.Close()
 
 	var data map[string][]string
 	err = json.NewDecoder(file).Decode(&data)
-	if err != nil {
-		panic(err)
-	}
-	users := strings.Join(data[dir], ",")
+	errorHandler(err)
 
+	return strings.Join(data[dir], ",")
+}
+
+func ghPrRequest(users string) {
 	fmt.Println("Users: " + users)
 
 	stdout, stderr, err := gh.Exec("pr", "edit", "--add-reviewer", users)
+
 	if err != nil {
-
 		stringStderr := stderr.String()
-
 		fmt.Println(stringStderr)
-
 		panic(err)
 	}
+
 	stringStdout := stdout.String()
 	fmt.Println(stringStdout)
+}
+
+func main() {
+	globalFlag := flag.Bool("global", false, "When you choose to using ./config/prar.json")
+	flag.Parse()
+
+	dir, err := getProjectName()
+	errorHandler(err)
+
+	filePath, err := getPrarFilePath(*globalFlag)
+	errorHandler(err)
+
+	users := getUsers(filePath, dir)
+	ghPrRequest(users)
 }
