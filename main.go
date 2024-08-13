@@ -2,8 +2,10 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/cli/go-gh/v2"
@@ -12,30 +14,37 @@ import (
 // JSON example
 // {"ar": ["joaothallis"], "elixir": ["josevalim", "eksperimental"]}
 
-func getPrarFilePath(globalArg string) (string, error) {
-	switch globalArg {
-	case "--global":
+func getPrarFilePath(globalArg bool) (string, error) {
+	if globalArg {
 		homeDir, err := os.UserHomeDir()
 		return homeDir + "/.config/prar.json", err
-	default:
+	} else {
 		homeDir, err := os.Getwd()
 		return homeDir + "/.prar.json", err
 	}
 }
 
-func main() {
-	args := os.Args[1:]
-	dir := os.Args[1]
-	var globalArg string
-
-	if len(args) > 1 {
-		globalArg = os.Args[2]
+func getProjectName() (string, error) {
+	args := flag.Args()
+	if len(args) >= 1 {
+		return os.Args[1], nil
 	} else {
-		globalArg = ""
+		cwd, err := os.Getwd()
+		dirName := filepath.Base(cwd)
+		return dirName, err
 	}
+}
 
-	filePath, err := getPrarFilePath(globalArg)
-	fmt.Printf(filePath)
+func main() {
+	globalFlag := flag.Bool("global", false, "When you choose to using ./config/prar.json")
+	flag.Parse()
+	fmt.Println(flag.Args())
+
+	dir, err := getProjectName()
+	if err != nil {
+		panic(err)
+	}
+	filePath, err := getPrarFilePath(*globalFlag)
 	if err != nil {
 		panic(err)
 	}
