@@ -31,8 +31,8 @@ func getProjectName() (string, error) {
 		return os.Args[1], nil
 	} else {
 		cwd, err := os.Getwd()
-		dirName := filepath.Base(cwd)
-		return dirName, err
+		projectName := filepath.Base(cwd)
+		return projectName, err
 	}
 }
 
