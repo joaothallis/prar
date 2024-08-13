@@ -49,7 +49,7 @@ func getUsers() string {
 	file, err := os.Open(filePath)
 	errorHandler(err)
 
-	dir, err := getProjectName()
+	repository, err := getProjectName()
 	errorHandler(err)
 
 	defer file.Close()
@@ -58,7 +58,7 @@ func getUsers() string {
 	err = json.NewDecoder(file).Decode(&data)
 	errorHandler(err)
 
-	return strings.Join(data[dir], ",")
+	return strings.Join(data[repository], ",")
 }
 
 func addReviewer(users string) {
