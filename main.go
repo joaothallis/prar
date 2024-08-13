@@ -21,8 +21,7 @@ func getPrarFilePath() (string, error) {
 		homeDir, err := os.UserHomeDir()
 		return homeDir + "/.config/prar.json", err
 	} else {
-		homeDir, err := os.Getwd()
-		return homeDir + "/.prar.json", err
+		return "./.prar.json", nil
 	}
 }
 
