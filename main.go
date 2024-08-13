@@ -61,7 +61,7 @@ func getUsers() string {
 	return strings.Join(data[dir], ",")
 }
 
-func ghPrRequest(users string) {
+func addReviewer(users string) {
 	fmt.Println("Users: " + users)
 
 	stdout, stderr, err := gh.Exec("pr", "edit", "--add-reviewer", users)
@@ -78,5 +78,5 @@ func ghPrRequest(users string) {
 
 func main() {
 	users := getUsers()
-	ghPrRequest(users)
+	addReviewer(users)
 }
