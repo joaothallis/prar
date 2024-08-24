@@ -20,20 +20,20 @@ func getPrarFilePath() (string, error) {
 	if *globalFlag {
 		homeDir, err := os.UserHomeDir()
 		return homeDir + "/.config/prar.json", err
-	} else {
-		return "./.prar.json", nil
 	}
+
+	return "./.prar.json", nil
 }
 
 func getProjectName() (string, error) {
 	args := flag.Args()
 	if len(args) > 0 {
 		return os.Args[1], nil
-	} else {
-		cwd, err := os.Getwd()
-		projectName := filepath.Base(cwd)
-		return projectName, err
 	}
+
+	cwd, err := os.Getwd()
+	projectName := filepath.Base(cwd)
+	return projectName, err
 }
 
 func errorHandler(err error) {
@@ -65,15 +65,12 @@ func addReviewer(users string) {
 	fmt.Println("Users: " + users)
 
 	stdout, stderr, err := gh.Exec("pr", "edit", "--add-reviewer", users)
-
 	if err != nil {
-		stringStderr := stderr.String()
-		fmt.Println(stringStderr)
+		fmt.Println(stderr.String())
 		panic(err)
 	}
-
-	stringStdout := stdout.String()
-	fmt.Println(stringStdout)
+	
+	fmt.Println(stdout.String())
 }
 
 func main() {
