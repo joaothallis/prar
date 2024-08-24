@@ -7,34 +7,12 @@ import (
 	"testing"
 )
 
-func TestGetPrarFilePath(t *testing.T) {
-	t.Run("Global Flag False", func(t *testing.T) {
-		path, err := getPrarFilePath()
-		if err != nil {
-			t.Errorf("error: %v", err)
-		}
-
-		expectedPath := "./.prar.json"
-		if path != expectedPath {
-			t.Errorf("Expected path %s, but got %s", expectedPath, path)
-		}
-	})
-
-	t.Run("Global Flag True", func(t *testing.T) {
-		os.Args = []string{"cmd", "-global"}
-		flag.CommandLine = flag.NewFlagSet(os.Args[1], flag.ExitOnError)
-
-		path, err := getPrarFilePath()
-		if err != nil {
-			t.Fatalf("Unexpected error: %v", err)
-		}
-
-		homeDir, _ := os.UserHomeDir()
-		expectedPath := homeDir + "/.config/prar.json"
-		if path != expectedPath {
-			t.Errorf("Expected path %s, but got %s", expectedPath, path)
-		}
-	})
+func TestGetUsers(t *testing.T) {
+	expectedResult := "claudionts,joaothallis"
+	result := getUsers()
+	if result != expectedResult {
+		t.Errorf("Expected %s, but got %s", expectedResult, result)
+	}
 }
 
 func TestGetProjectName(t *testing.T) {
@@ -68,10 +46,32 @@ func TestGetProjectName(t *testing.T) {
 	})
 }
 
-func TestGetUsers(t *testing.T) {
-	expectedResult := "claudionts,joaothallis"
-	result := getUsers()
-	if result != expectedResult {
-		t.Errorf("Expected %s, but got %s", expectedResult, result)
-	}
+func TestGetPrarFilePath(t *testing.T) {
+	t.Run("Global Flag False", func(t *testing.T) {
+		path, err := getPrarFilePath()
+		if err != nil {
+			t.Errorf("error: %v", err)
+		}
+
+		expectedPath := "./.prar.json"
+		if path != expectedPath {
+			t.Errorf("Expected path %s, but got %s", expectedPath, path)
+		}
+	})
+
+	t.Run("Global Flag True", func(t *testing.T) {
+		os.Args = []string{"cmd", "-global"}
+		flag.CommandLine = flag.NewFlagSet(os.Args[1], flag.ExitOnError)
+
+		path, err := getPrarFilePath()
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		homeDir, _ := os.UserHomeDir()
+		expectedPath := homeDir + "/.config/prar.json"
+		if path != expectedPath {
+			t.Errorf("Expected path %s, but got %s", expectedPath, path)
+		}
+	})
 }
