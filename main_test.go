@@ -8,7 +8,7 @@ import (
 )
 
 func TestGetPrarFilePath(t *testing.T) {
-	t.Run("GlobalFlagFalse", func(t *testing.T) {
+	t.Run("Global Flag False", func(t *testing.T) {
 		path, err := getPrarFilePath()
 		if err != nil {
 			t.Errorf("error: %v", err)
@@ -20,7 +20,7 @@ func TestGetPrarFilePath(t *testing.T) {
 		}
 	})
 
-	t.Run("GlobalFlagTrue", func(t *testing.T) {
+	t.Run("Global Flag True", func(t *testing.T) {
 		os.Args = []string{"cmd", "-global"}
 		flag.CommandLine = flag.NewFlagSet(os.Args[1], flag.ExitOnError)
 
@@ -66,5 +66,12 @@ func TestGetProjectName(t *testing.T) {
 			t.Errorf("Expected project name %s, but got %s", expectedName, projectName)
 		}
 	})
+}
 
+func TestGetUsers(t *testing.T) {
+	expectedResult := "claudionts,joaothallis"
+	result := getUsers()
+	if result != expectedResult {
+		t.Errorf("Expected %s, but got %s", expectedResult, result)
+	}
 }
